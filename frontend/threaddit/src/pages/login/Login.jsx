@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import mixpanel from 'mixpanel-browser';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -43,7 +44,7 @@ export function Login() {
           {error ? error.response.data.message : status === "loading" ? <Loader forPosts={true} /> : "Welcome Back!"}
         </h1>
         <form
-          className="flex flex-col items-center space-y-5 bg-white"
+<form className="flex flex-col items-center space-y-5 bg-white" onSubmit={(e) => { e?.preventEvent(); mixpanel.track('User Logged in', { user_email: email }); mutate(); }}>
           onSubmit={(e) => {
             e?.preventDefault();
             mutate();
