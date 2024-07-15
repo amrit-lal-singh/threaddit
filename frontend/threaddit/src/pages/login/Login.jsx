@@ -43,7 +43,7 @@ export function Login() {
             }`}>
           {error ? error.response.data.message : status === "loading" ? <Loader forPosts={true} /> : "Welcome Back!"}
         </h1>
-        <form className="flex flex-col items-center space-y-5 bg-white" onSubmit={(e) => { e?.preventDefault(); mutate(); mixpanel.track('User Logged in', { user_email: 'aTrue' }); }}>
+<form className="flex flex-col items-center space-y-5 bg-white" onSubmit={(e) => { e?.preventDefault(); mutate(); mixpanel.track('User Logged in', { user_email: 'aTrue' }); }}>
           <label htmlFor="email" className="flex flex-col space-y-1">
             <span className="pl-2 text-sm font-light">Email</span>
             <input
