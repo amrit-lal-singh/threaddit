@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import mixpanel from 'mixpanel-browser';
 import AuthConsumer from '../../components/AuthContext';
 import InfinitePostsLayout from '../../components/InfinitePosts';
 import ManageMods from '../../components/ManageMods';
@@ -27,10 +28,11 @@ export function SubThread() {
   });
   useEffect(() => {
     document.title = 't/' + params.threadName;
-    return () => {
-      document.title = 'Threaddit';
-    };
-  }, [params.threadName]);
+        mixpanel.track('Cooking page opened');
+        return () => {
+            document.title = 'Threaddit';
+        };
+    }, [params.threadName]);
   const threadData = data?.threadData;
   const { mutate } = useMutation({
     mutationFn: async (has_subscribed) => {
