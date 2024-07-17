@@ -1,33 +1,35 @@
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import AuthConsumer from "../../components/AuthContext.jsx";
-import { AppLogo } from "../../components/Navbar.jsx";
-import Svg from "../../components/Svg.jsx";
-import Loader from "../../components/Loader.jsx";
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthConsumer from '../../components/AuthContext.jsx';
+import { AppLogo } from '../../components/Navbar.jsx';
+import Svg from '../../components/Svg.jsx';
+import Loader from '../../components/Loader.jsx';
 
 export function Register() {
   const navigate = useNavigate();
   const { isAuthenticated, login } = AuthConsumer();
   const [showPass, setShowPass] = useState(false);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { mutate, error, status } = useMutation({
     mutationFn: async () => {
-      return await axios.post("/api/user/register", { username, email, password }).then((res) => login(res.data));
+      return await axios
+        .post('/api/user/register', { username, email, password })
+        .then((res) => login(res.data));
     },
-    onSuccess: () => navigate("/home"),
+    onSuccess: () => navigate('/home'),
   });
   useEffect(() => {
-    document.title = "Threaddit | Signup";
+    document.title = 'Threaddit | Signup';
     return () => {
-      document.title = "Threaddit";
-    }
-  })
+      document.title = 'Threaddit';
+    };
+  });
   if (isAuthenticated) {
-    return navigate("/home");
+    return navigate('/home');
   }
   const {
     username: usernameError,
@@ -40,16 +42,21 @@ export function Register() {
       onSubmit={(e) => {
         e.preventDefault();
         mutate();
-      }}>
+      }}
+    >
       <AppLogo forBanner={true} />
       <div className="flex flex-col p-5 py-10 space-y-10 bg-white rounded-md shadow-xl md:p-5">
         <div className="flex justify-center md:hidden">
           <AppLogo>
-            <h1 className="font-mono text-3xl font-bold tracking-tight md:block">Threaddit</h1>
+            <h1 className="font-mono text-3xl font-bold tracking-tight md:block">
+              Threaddit
+            </h1>
           </AppLogo>
         </div>
-        <h1 className={`${status !== "loading" && "text-2xl"} font-semibold tracking-wide`}>
-          {status === "loading" ? <Loader forPosts={true} /> : "Welcome Back!"}
+        <h1
+          className={`${status !== 'loading' && 'text-2xl'} font-semibold tracking-wide`}
+        >
+          {status === 'loading' ? <Loader forPosts={true} /> : 'Welcome Back!'}
         </h1>
         <form className="flex flex-col items-center space-y-5 bg-white">
           <label htmlFor="email" className="flex flex-col space-y-1">
@@ -68,7 +75,11 @@ export function Register() {
               className="px-2 py-2 pr-24 border-b focus:outline-none focus:border-black"
             />
             {usernameError?.map((e) => (
-              <abbr title={e} className="w-72 text-sm font-semibold no-underline truncate text-theme-orange" key={e}>
+              <abbr
+                title={e}
+                className="w-72 text-sm font-semibold no-underline truncate text-theme-orange"
+                key={e}
+              >
                 {e}
               </abbr>
             ))}
@@ -87,7 +98,11 @@ export function Register() {
               className="px-2 py-2 pr-24 border-b focus:outline-none focus:border-black"
             />
             {emailError?.map((e) => (
-              <aabr title={e} className="w-72 text-sm font-semibold truncate underline-none text-theme-orange" key={e}>
+              <aabr
+                title={e}
+                className="w-72 text-sm font-semibold truncate underline-none text-theme-orange"
+                key={e}
+              >
                 {e}
               </aabr>
             ))}
@@ -96,7 +111,7 @@ export function Register() {
             <span className="pl-2 text-sm font-light">Password</span>
             <div className="flex items-center border-b">
               <input
-                type={`${showPass ? "text" : "password"}`}
+                type={`${showPass ? 'text' : 'password'}`}
                 name="password"
                 id="password"
                 className="px-2 py-2 pr-20 focus:outline-none"
@@ -111,37 +126,55 @@ export function Register() {
                 <aabr
                   title={e}
                   className="w-72 text-sm font-semibold truncate underline-none text-theme-orange"
-                  key={e}>
+                  key={e}
+                >
                   {e}
                 </aabr>
               ))}
               {showPass ? (
-                <Svg type="eye-open" className="w-6 h-6" onClick={() => setShowPass(!showPass)} />
+                <Svg
+                  type="eye-open"
+                  className="w-6 h-6"
+                  onClick={() => setShowPass(!showPass)}
+                />
               ) : (
-                <Svg type="eye-close" className="w-6 h-6" onClick={() => setShowPass(!showPass)} />
+                <Svg
+                  type="eye-close"
+                  className="w-6 h-6"
+                  onClick={() => setShowPass(!showPass)}
+                />
               )}
             </div>
           </label>
           <button
             type="submit"
-            disabled={status === "loading"}
-            className="py-2 w-full font-semibold text-white rounded-md bg-theme-orange active:scale-95">
-            {status === "loading" ? "Signing Up..." : "Sign Up"}
+            disabled={status === 'loading'}
+            className="py-2 w-full font-semibold text-white rounded-md bg-theme-orange active:scale-95"
+          >
+            {status === 'loading' ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
         <div className="flex justify-between">
           {/* TODO: Implement forgot password */}
-          <Link to="/register" className="flex font-semibold cursor-pointer group hover:text-theme-orange">
+          <Link
+            to="/register"
+            className="flex font-semibold cursor-pointer group hover:text-theme-orange"
+          >
             Forgot Password
             <Svg
               type="arrow-right"
-              className="invisible w-6 h-6 duration-200 group-hover:visible text-theme-orange group-hover:translate-x-1"></Svg>
+              className="invisible w-6 h-6 duration-200 group-hover:visible text-theme-orange group-hover:translate-x-1"
+            ></Svg>
           </Link>
-          <Link to="/login" className="flex font-semibold cursor-pointer hover:text-theme-orange group">
+          <Link
+            to="/login"
+            className="flex font-semibold cursor-pointer hover:text-theme-orange group"
+          >
             Login
             <Svg
               type="arrow-right"
-              className="invisible w-6 h-6 duration-200 group-hover:visible text-theme-orange group-hover:translate-x-1"></Svg>
+              className="invisible w-6 h-6 duration-200 group-hover:visible text-theme-orange group-hover:translate-x-1"
+            ></Svg>
           </Link>
         </div>
       </div>

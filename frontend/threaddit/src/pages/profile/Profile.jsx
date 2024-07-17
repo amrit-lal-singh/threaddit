@@ -1,36 +1,36 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import avatar from "../../assets/avatar.png";
-import AuthConsumer from "../../components/AuthContext";
-import InfinitePostsLayout from "../../components/InfinitePosts";
-import Modal from "../../components/Modal";
-import UpdateUser from "../../components/UpdateUser";
-import { Chat } from "../inbox/Inbox";
-import Loader from "../../components/Loader";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import avatar from '../../assets/avatar.png';
+import AuthConsumer from '../../components/AuthContext';
+import InfinitePostsLayout from '../../components/InfinitePosts';
+import Modal from '../../components/Modal';
+import UpdateUser from '../../components/UpdateUser';
+import { Chat } from '../inbox/Inbox';
+import Loader from '../../components/Loader';
 
 export function Profile() {
   const { logout, user } = AuthConsumer();
   const { username } = useParams();
   const [action, setAction] = useState(false);
   const { data, isFetching: userIsFetching } = useQuery({
-    queryKey: ["user", username],
+    queryKey: ['user', username],
     queryFn: async () => {
       return await axios.get(`/api/user/${username}`).then((res) => res.data);
     },
   });
   useEffect(() => {
     switch (action) {
-      case "message":
+      case 'message':
         setAction(<Chat sender={data} setCurChat={setAction} newChat={true} />);
         break;
-      case "edit":
+      case 'edit':
         setAction(<UpdateUser setModal={setAction} />);
         break;
-      case "delete":
-        if (window.confirm("Are you sure you want to delete your account?")) {
+      case 'delete':
+        if (window.confirm('Are you sure you want to delete your account?')) {
           axios.delete(`/api/user`).then(() => logout());
         }
         setAction(false);
@@ -38,7 +38,10 @@ export function Profile() {
     }
   }, [action, data, username, logout]);
 
-  useEffect(() => { document.title = "u/" + username; return () => document.title = "Threaddit" }, [username]);
+  useEffect(() => {
+    document.title = 'u/' + username;
+    return () => (document.title = 'Threaddit');
+  }, [username]);
   return (
     <div className="flex flex-col flex-1 items-center w-full bg-theme-cultured">
       {userIsFetching ? (
@@ -62,11 +65,20 @@ export function Profile() {
                 }
               />
               <div className="flex flex-col flex-1 items-center w-full md:p-2">
-                <h1 className="mt-2 text-lg font-semibold md:m-0">u/{data.username}</h1>
-                <p className="my-4 w-11/12 text-sm text-center md:my-2 md:text-base">{data?.bio}</p>
+                <h1 className="mt-2 text-lg font-semibold md:m-0">
+                  u/{data.username}
+                </h1>
+                <p className="my-4 w-11/12 text-sm text-center md:my-2 md:text-base">
+                  {data?.bio}
+                </p>
                 <div className="flex justify-between items-center w-full md:w-11/12">
-                  <p className="text-xs md:text-sm">Karma: {data?.karma.user_karma}</p>
-                  <p className="text-xs md:text-sm">Cake Day On: {new Date(data?.registrationDate).toDateString()}</p>
+                  <p className="text-xs md:text-sm">
+                    Karma: {data?.karma.user_karma}
+                  </p>
+                  <p className="text-xs md:text-sm">
+                    Cake Day On:{' '}
+                    {new Date(data?.registrationDate).toDateString()}
+                  </p>
                 </div>
               </div>
             </div>
@@ -86,7 +98,8 @@ export function Profile() {
               id="options"
               className="p-2 mt-2 bg-white rounded-md border-2"
               value={action}
-              onChange={(e) => setAction(e.target.value)}>
+              onChange={(e) => setAction(e.target.value)}
+            >
               <option value={false}>Choose an action</option>
               {user.username === data?.username && (
                 <>
@@ -105,7 +118,7 @@ export function Profile() {
         enabled={data?.username !== undefined}
       />
       <AnimatePresence>
-        {action !== false && action !== "delete" && (
+        {action !== false && action !== 'delete' && (
           <Modal showModal={action} setShowModal={setAction}>
             {action}
           </Modal>

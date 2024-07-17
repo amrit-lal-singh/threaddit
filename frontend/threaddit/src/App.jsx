@@ -1,56 +1,60 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense, lazy } from "react";
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
-import AppLayout from "./components/AppLayout.jsx";
-import { AuthProvider } from "./components/AuthContext.jsx";
-import Error from "./components/Error.jsx";
-import FeedLayout from "./components/FeedLayout.jsx";
-import Loader from "./components/Loader.jsx";
-import RequireAuth from "./components/PrivateRoute.jsx";
-import Login from "./pages/login/Login.jsx";
-import Register from "./pages/register/Register.jsx";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Suspense, lazy } from 'react';
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
+import AppLayout from './components/AppLayout.jsx';
+import { AuthProvider } from './components/AuthContext.jsx';
+import Error from './components/Error.jsx';
+import FeedLayout from './components/FeedLayout.jsx';
+import Loader from './components/Loader.jsx';
+import RequireAuth from './components/PrivateRoute.jsx';
+import Login from './pages/login/Login.jsx';
+import Register from './pages/register/Register.jsx';
 
-const Feed = lazy(() => import("./pages/feed/Feed.jsx"));
-const Profile = lazy(() => import("./pages/profile/Profile.jsx"));
-const FullPost = lazy(() => import("./pages/fullPost/FullPost.jsx"));
-const Inbox = lazy(() => import("./pages/inbox/Inbox.jsx"));
-const SavedPosts = lazy(() => import("./pages/saved/SavedPosts.jsx"));
-const SubThread = lazy(() => import("./pages/thread/SubThread.jsx"));
+const Feed = lazy(() => import('./pages/feed/Feed.jsx'));
+const Profile = lazy(() => import('./pages/profile/Profile.jsx'));
+const FullPost = lazy(() => import('./pages/fullPost/FullPost.jsx'));
+const Inbox = lazy(() => import('./pages/inbox/Inbox.jsx'));
+const SavedPosts = lazy(() => import('./pages/saved/SavedPosts.jsx'));
+const SubThread = lazy(() => import('./pages/thread/SubThread.jsx'));
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <AppLayout />,
     errorElement: <Error />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <FeedLayout />,
         children: [
           {
-            path: "/",
+            path: '/',
             element: <Navigate to="/all" />,
           },
           {
-            path: "/:feedName",
+            path: '/:feedName',
             element: <Feed />,
           },
           {
-            path: "/post/:postId",
+            path: '/post/:postId',
             element: <FullPost />,
           },
         ],
       },
       {
-        path: "/u/:username",
+        path: '/u/:username',
         element: <Profile />,
       },
       {
-        path: "/t/:threadName",
+        path: '/t/:threadName',
         element: <SubThread />,
       },
       {
-        path: "/saved",
+        path: '/saved',
         element: (
           <RequireAuth>
             <SavedPosts />
@@ -58,7 +62,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/inbox",
+        path: '/inbox',
         element: (
           <RequireAuth>
             <Inbox />
@@ -68,11 +72,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
   },
   {
-    path: "/register",
+    path: '/register',
     element: <Register />,
   },
 ]);

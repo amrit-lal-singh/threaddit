@@ -1,12 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import AuthConsumer from "../../components/AuthContext";
-import Comment, { CommentMode } from "../../components/Comment";
-import Loader from "../../components/Loader";
-import Post from "../../components/Post";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import AuthConsumer from '../../components/AuthContext';
+import Comment, { CommentMode } from '../../components/Comment';
+import Loader from '../../components/Loader';
+import Post from '../../components/Post';
 
 export function FullPost() {
   const queryClient = useQueryClient();
@@ -14,17 +14,26 @@ export function FullPost() {
   const { postId } = useParams();
   const [commentMode, setCommentMode] = useState(false);
   const { data, isFetching } = useQuery({
-    queryKey: ["post/comment", postId],
-    queryFn: async () => await axios.get(`/api/comments/post/${postId}`).then((res) => res.data),
+    queryKey: ['post/comment', postId],
+    queryFn: async () =>
+      await axios.get(`/api/comments/post/${postId}`).then((res) => res.data),
   });
   const { mutate } = useMutation({
     mutationFn: async (data) => {
-      await axios.post(`/api/comments`, { post_id: postId, content: data }).then((res) => {
-        queryClient.setQueryData({ queryKey: ["post/comment", postId] }, (oldData) => {
-          return { ...oldData, comment_info: [...oldData.comment_info, res.data.new_comment] };
+      await axios
+        .post(`/api/comments`, { post_id: postId, content: data })
+        .then((res) => {
+          queryClient.setQueryData(
+            { queryKey: ['post/comment', postId] },
+            (oldData) => {
+              return {
+                ...oldData,
+                comment_info: [...oldData.comment_info, res.data.new_comment],
+              };
+            }
+          );
+          setCommentMode(false);
         });
-        setCommentMode(false);
-      });
     },
   });
   if (isFetching) {
@@ -37,7 +46,11 @@ export function FullPost() {
   return (
     <div className="flex flex-col p-2 space-y-2 w-full">
       <ul>
-        <Post post={data?.post_info} isExpanded={true} setCommentMode={setCommentMode} />
+        <Post
+          post={data?.post_info}
+          isExpanded={true}
+          setCommentMode={setCommentMode}
+        />
       </ul>
       {commentMode && (
         <div className="py-3 pl-2 space-y-2 w-full bg-white rounded-xl md:text-base">
@@ -53,7 +66,11 @@ export function FullPost() {
         <ul className="space-y-2 rounded-xl md:border-2 md:p-2 hover:shadow-sm border-theme-gray-blue">
           <AnimatePresence>
             {data?.comment_info.map((comment, index) => (
-              <Comment key={comment.comment.comment_info.id} {...comment} commentIndex={index} />
+              <Comment
+                key={comment.comment.comment_info.id}
+                {...comment}
+                commentIndex={index}
+              />
             ))}
           </AnimatePresence>
         </ul>

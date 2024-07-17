@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import ThreadsSidebar from "./ThreadsSidebar";
+import { Outlet } from 'react-router-dom';
+import ThreadsSidebar from './ThreadsSidebar';
 
 export default function FeedLayout() {
   return (
