@@ -1,34 +1,35 @@
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import AuthConsumer from '../../components/AuthContext.jsx';
-import Loader from '../../components/Loader.jsx';
-import { AppLogo } from '../../components/Navbar.jsx';
-import Svg from '../../components/Svg.jsx';
+import { useMutation } from "@tanstack/react-query";
+import mixpanel from 'mixpanel-browser';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthConsumer from "../../components/AuthContext.jsx";
+import Loader from "../../components/Loader.jsx";
+import { AppLogo } from "../../components/Navbar.jsx";
+import Svg from "../../components/Svg.jsx";
 
 export function Login() {
   const [showPass, setShowPass] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { isAuthenticated, login } = AuthConsumer();
   const navigate = useNavigate();
   const { mutate, status, error, reset } = useMutation({
     mutationFn: async () => {
       return await axios
-        .post('/api/user/login', { email, password })
+        .post("/api/user/login", { email, password })
         .then((res) => login(res.data));
     },
-    onSuccess: () => navigate('/home'),
+    onSuccess: () => navigate("/home"),
   });
   useEffect(() => {
-    document.title = 'Threaddit | Login';
+    document.title = "Threaddit | Login";
     return () => {
-      document.title = 'Threaddit';
+      document.title = "Threaddit";
     };
   });
   if (isAuthenticated) {
-    return navigate('/home');
+    return navigate("/home");
   }
   return (
     <div className="flex justify-center items-center min-h-screen md:space-x-10 bg-theme-cultured">
@@ -42,22 +43,22 @@ export function Login() {
           </AppLogo>
         </div>
         <h1
-          className={`font-semibold ${status !== 'loading' && 'text-2xl '} tracking-wide ${
-            error && 'font-bold uppercase text-theme-orange'
+          className={`font-semibold ${status !== "loading" && "text-2xl "} tracking-wide ${
+            error && "font-bold uppercase text-theme-orange"
           }`}
         >
           {error ? (
             error.response.data.message
-          ) : status === 'loading' ? (
+          ) : status === "loading" ? (
             <Loader forPosts={true} />
           ) : (
-            'Welcome Back!'
+            "Welcome Back!"
           )}
         </h1>
         <form
           className="flex flex-col items-center space-y-5 bg-white"
           onSubmit={(e) => {
-            e?.preventDefault();
+onSubmit={(e) => { e?.preventDefault(); mixpanel.track('User Logged in', { user_email: email }); mutate(); }}
             mutate();
           }}
         >
@@ -80,7 +81,7 @@ export function Login() {
             <span className="pl-2 text-sm font-light">Password</span>
             <div className="flex items-center border-b">
               <input
-                type={`${showPass ? 'text' : 'password'}`}
+                type={`${showPass ? "text" : "password"}`}
                 name="password"
                 id="password"
                 className="px-2 py-2 pr-20 focus:outline-none"
@@ -109,10 +110,10 @@ export function Login() {
           </label>
           <button
             type="submit"
-            disabled={status === 'loading'}
+            disabled={status === "loading"}
             className="py-2 w-full font-semibold text-white rounded-md bg-theme-orange active:scale-95"
           >
-            {status === 'loading' ? 'Logging in...' : 'Log in'}
+            {status === "loading" ? "Logging in..." : "Log in"}
           </button>
         </form>
         <div className="flex justify-between">
