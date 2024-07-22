@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import mixpanel from 'mixpanel-browser';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -35,7 +36,8 @@ export function SubThread() {
   const { mutate } = useMutation({
     mutationFn: async (has_subscribed) => {
       if (has_subscribed) {
-        axios.delete(`/api/threads/subscription/${threadData.id}`).then(() =>
+        axios.delete(`/api/threads/subscription/${threadData.id}`).then(() => {
+          mixpanel.track('subscribed', { total_subscribers: threadData?.subscriberCount });
           queryClient.setQueryData(
             { queryKey: ['thread', params.threadName] },
             (oldData) => {
@@ -46,7 +48,8 @@ export function SubThread() {
           )
         );
       } else {
-        axios.post(`/api/threads/subscription/${threadData.id}`).then(() =>
+        axios.post(`/api/threads/subscription/${threadData.id}`).then(() => {
+          mixpanel.track('subscribed', { total_subscribers: threadData?.subscriberCount });
           queryClient.setQueryData(
             { queryKey: ['thread', params.threadName] },
             (oldData) => {

@@ -1,3 +1,5 @@
+import mixpanel from 'mixpanel-browser';
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
@@ -38,10 +40,11 @@ export function Profile() {
     }
   }, [action, data, username, logout]);
 
-  useEffect(() => {
-    document.title = 'u/' + username;
-    return () => (document.title = 'Threaddit');
-  }, [username]);
+useEffect(() => {
+  document.title = 'u/' + username;
+  mixpanel.track('Profile_check', { 'profile_checked': 'True' });
+  return () => (document.title = 'Threaddit');
+}, [username]);
   return (
     <div className="flex flex-col flex-1 items-center w-full bg-theme-cultured">
       {userIsFetching ? (
