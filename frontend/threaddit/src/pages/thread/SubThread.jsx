@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import mixpanel from 'mixpanel-browser';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -35,27 +36,25 @@ export function SubThread() {
   const { mutate } = useMutation({
     mutationFn: async (has_subscribed) => {
       if (has_subscribed) {
-        axios.delete(`/api/threads/subscription/${threadData.id}`).then(() =>
-          queryClient.setQueryData(
-            { queryKey: ['thread', params.threadName] },
-            (oldData) => {
-              return {
-                threadData: { ...oldData.threadData, has_subscribed: false },
-              };
-            }
-          )
-        );
+        axios.delete(`/api/threads/subscription/${threadData.id}`).then(() => {
+            queryClient.setQueryData(
+                { queryKey: ['thread', params.threadName] },
+                (oldData) => {
+                    return { threadData: { ...oldData.threadData, has_subscribed: false }, };
+                }
+            );
+            mixpanel.track('unsubscribed', { total_subscribers: threadData.subscriberCount });
+        });
       } else {
-        axios.post(`/api/threads/subscription/${threadData.id}`).then(() =>
-          queryClient.setQueryData(
-            { queryKey: ['thread', params.threadName] },
-            (oldData) => {
-              return {
-                threadData: { ...oldData.threadData, has_subscribed: true },
-              };
-            }
-          )
-        );
+        axios.post(`/api/threads/subscription/${threadData.id}`).then(() => {
+            queryClient.setQueryData(
+                { queryKey: ['thread', params.threadName] },
+                (oldData) => {
+                    return { threadData: { ...oldData.threadData, has_subscribed: true }, };
+                }
+            );
+            mixpanel.track('subscribed', { total_subscribers: threadData.subscriberCount });
+        });
       }
     },
   });
