@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import mixpanel from 'mixpanel-browser';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -140,14 +141,7 @@ export function SubThread() {
         )}
         <div className="flex flex-col justify-around space-y-3 md:space-x-10 md:flex-row md:space-y-0">
           {isAuthenticated && (
-            <button
-              className={`px-32 py-2 text-white rounded-full active:scale-90 ${
-                threadData?.has_subscribed
-                  ? 'bg-blue-400'
-                  : 'bg-theme-red-coral'
-              } `}
-              onClick={() => mutate(threadData?.has_subscribed)}
-            >
+            <button className={`px-32 py-2 text-white rounded-full active:scale-90 ${threadData?.has_subscribed ? 'bg-blue-400' : 'bg-theme-red-coral'}`} onClick={() => { mutate(threadData?.has_subscribed); mixpanel.track('subscribed', { total_subscriber: threadData?.subscriberCount }); }}>
               {threadData?.has_subscribed ? 'Leave' : 'Join'}
             </button>
           )}
